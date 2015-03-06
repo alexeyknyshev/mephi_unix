@@ -41,6 +41,8 @@ tmp_dir_name=`mktemp –d`
 
 Ну и конечно же за собой надо убирать:
 
+```bash
 trap 'rm -rf "$tmp_dir_name"' EXIT
+```
 
 Regards, Alexey Knyshev
