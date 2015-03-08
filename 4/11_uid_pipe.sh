@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cat /etc/passwd | cut -f3 -d: | cut -f1 -d:
+cat /etc/passwd | grep $(users) | cut -f3 -d: | cut -f1 -d:
