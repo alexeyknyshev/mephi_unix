@@ -15,7 +15,7 @@ mkdir $HOME/flowers/rose;
 mkdir $HOME/flowers/violet;
 mkdir $HOME/flowers/dandelion;
 
-echo "Directories created. Press any key to delete created dirs...";
+echo "Directories created. Press Enter to delete created dirs...";
 
 read;
 
