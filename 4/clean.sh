@@ -8,3 +8,4 @@ rm -rf $HOME/flowers
 rm $HOME/f1
 rm $HOME/f2
 rm $HOME/f3
+rm $HOME/myerror
