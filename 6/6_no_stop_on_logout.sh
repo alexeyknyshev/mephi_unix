@@ -1,13 +1,6 @@
 #!/bin/bash
 
-echo "Install screen application:"
-echo -e "\tsudo apt-get install screen\n"
-echo "Start screen session:"
-echo -e "\tscreen\n"
-echo 'run any continuous process. "top" for example:'
-echo -e "\ttop\n"
-echo "Detach from session:"
-echo "Press Ctrl+A then D"
-echo "Logout"
-echo "Login and restore session:"
-echo -e "\tscreen -r"
+script_full_path=`readlink -e "$0"`
+script_dir=`dirname "$script_full_path"`
+
+nohup "$script_dir/1_inf_loop_one_tps.sh" </dev/null >/dev/null &
