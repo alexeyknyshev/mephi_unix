@@ -1,4 +1,4 @@
-]#!/bin/bash
+#!/bin/bash
 shopt -s expand_aliases
 alias createfile='echo -n "Enter new file name : "
 read filename
