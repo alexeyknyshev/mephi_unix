@@ -6,10 +6,8 @@
 
 mkdir -p $HOME/A/{B,E,B/C,B/C/D};
 
-echo "Directories created. Press Enter to delete them!";
+echo "Directories created.";
 
-read;
 
-rm -rf $HOME/A;
 
 exit 0;

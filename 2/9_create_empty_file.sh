@@ -6,10 +6,8 @@
 
 touch $HOME/test.txt;
 
-echo "File created. Press Enter to delete...";
+echo "File created.";
 
-read;
 
-rm -f $HOME/test.txt;
 
 exit 0;
