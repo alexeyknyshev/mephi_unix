@@ -4,7 +4,7 @@ rm $HOME/myfile
 rm $HOME/MyFile
 rm $HOME/spisok
 rm $HOME/randomfile5
-rm $HOME/flowers/violet
-rm $HOME/flowers/rose
-rm $HOME/flowers/dandelion
-rm $HOME/flowers
+rm -rf $HOME/flowers
+rm $HOME/f1
+rm $HOME/f2
+rm $HOME/f3
