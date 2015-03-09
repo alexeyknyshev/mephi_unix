@@ -11,5 +11,3 @@ echo $MYNAME
 date +"%d/%m/%y %T"
 
 who
-
-

@@ -3,4 +3,5 @@
 script_full_path=`readlink -e "$0"`
 script_dir=`dirname "$script_full_path"`
 
-nohup "$script_dir/1_inf_loop_one_tps.sh" </dev/null >/dev/null &
+# 8_catch_and_write_signal
+rm "$script_dir/received_signal"

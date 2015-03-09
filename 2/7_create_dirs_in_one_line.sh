@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 #2.7. Находясь в своем домашнем каталоге, создайте следующие
@@ -7,7 +6,3 @@
 mkdir -p $HOME/A/{B,E,B/C,B/C/D};
 
 echo "Directories created.";
-
-
-
-exit 0;
