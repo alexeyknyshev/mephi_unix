@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/bash -e
+
+CMD='9_file_size_manager_worker.sh'
 
 function usage()
 {
@@ -6,7 +8,7 @@ function usage()
 }
 
 script_name=`basename $0`
-MAX_SIZE=128
+MAX_SIZE=2097152
 
 while true
 do
@@ -65,45 +67,72 @@ fi
 script_full_path=`readlink -e "$0"`
 script_dir=`dirname "$script_full_path"`
 
-cmd='2_inf_loop_echo.sh'
-
 tmp_file_name_1=`mktemp`
 tmp_file_name_2=`mktemp`
 
-echo "created tmp_file $tmp_file_name_1"
-echo "created tmp_file $tmp_file_name_2"
+echo -e "$script_name:\tcreated tmp_file $tmp_file_name_1"
+echo -e "$script_name:\tcreated tmp_file $tmp_file_name_2"
 
-nice -n $nice_1 { echo 'hello' > $tmp_file_name_1 &
+echo -e "$script_name:\tpid $$"
+
+nice -n $nice_1 "$script_dir/$CMD" 'hello' "$tmp_file_name_1" &
 pid_1=$!
-echo "$cmd started with pid $pid_1 and nice $nice_1"
+echo -e "$script_name:\t$CMD started with pid $pid_1 and nice $nice_1"
 
-nice -n $nice_2 "$script_dir/$cmd" 'deadb' > $tmp_file_name_2 &
+nice -n $nice_2 "$script_dir/$CMD" 'world' "$tmp_file_name_2" &
 pid_2=$!
-echo "$cmd started with pid $pid_2 and nice $nice_2"
+echo -e "$script_name:\t$CMD started with pid $pid_2 and nice $nice_2"
 
-trap 'rm -f "$tmp_file_name_1" "$tmp_file_name_2"; kill -TERM "$pid_1" "$pid_2"' EXIT
+sig_term_handler()
+{
+    trap '' EXIT
+    echo -e "$script_name:\t\tterminating childs $pid_1 $pid_2"
+    kill -TERM $pid_1 $pid_2
+    wait $pid_1 $pid_2
+    echo -e "$script_name:\t\tchilds $pid_1 $pid_2 terminated"
+    exit
+}
+
+sig_usr1_handler()
+{
+    echo -e "$script_name:\t$$ SIGUSR1"
+    rm -f "$tmp_file_name_1" "$tmp_file_name_2"
+}
+
+trap sig_term_handler SIGTERM SIGINT EXIT ERR
+trap sig_usr1_handler SIGUSR1
 
 file_size_1=0
 file_size_2=0
 
-while true
+while :
 do
-    file_size_1=`du -b $tmp_file_name_1 | awk '{print $1}'`
-    file_size_2=`du -b $tmp_file_name_2 | awk '{print $1}'`
+    if [ -e $tmp_file_name_1 ]
+    then
+        file_size_1=`stat --printf="%s\n" $tmp_file_name_1`
+        [[ $file_size_1 =~ ^[0-9]+$ ]] || file_size_1=0
+    fi
+
+    if [ -e $tmp_file_name_2 ]
+    then
+        file_size_2=`stat --printf="%s\n" $tmp_file_name_2`
+        [[ $file_size_2 =~ ^[0-9]+$ ]] || file_size_2=0
+    fi
 
     if [ $file_size_1 -gt $MAX_SIZE ]
     then
-        echo "process with pid $pid_1 created larger then $MAX_SIZE file:"
+        echo -e "$script_name:\tprocess with pid $pid_1 created file larger then $MAX_SIZE bytes:"
         break
     fi
 
     if [ $file_size_2 -gt $MAX_SIZE ]
     then
-        echo "process with pid $pid_2 created larger then $MAX_SIZE file:"
+        echo -e "$script_name:\tprocess with pid $pid_2 created file larger then $MAX_SIZE bytes:"
         break
     fi
+
+    sleep 0
 done
 
-echo -e "first file size:\t$file_size_1"
-echo -e "second file size:\t$file_size_2"
-
+echo -e "$script_name:\tfirst file size:\t$file_size_1"
+echo -e "$script_name:\tsecond file size:\t$file_size_2"
